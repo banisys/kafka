@@ -7,10 +7,13 @@ const rl = readline.createInterface({
 });
 
 async function init() {
+
   const producer = kafka.producer();
 
   console.log("Connecting Producer");
+
   await producer.connect();
+
   console.log("Producer Connected Successfully");
 
   rl.setPrompt("> ");
@@ -19,19 +22,24 @@ async function init() {
   rl.on("line", async function (line) {
     const [riderName, location] = line.split(" ");
     await producer.send({
+
       topic: "rider-updates",
       messages: [
         {
-          // partition: location.toLowerCase() === "north" ? 0 : 1,
           partition: (location && typeof location === 'string') ? location.toLowerCase() === "north" ? 0 : 1 : 1,
           key: "location-update",
           value: JSON.stringify({ name: riderName, location }),
         },
       ],
+      
     });
+
+ 
+    
   }).on("close", async () => {
     await producer.disconnect();
   });
+
 }
 
 init();

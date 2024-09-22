@@ -8,12 +8,18 @@ async function init() {
   await consumer.subscribe({ topics: ["rider-updates"], fromBeginning: true });
 
   await consumer.run({
+
     eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
-      console.log(
-        `${group}: [${topic}]: PART:${partition}:`,
-        message.value.toString()
-      );
+      console.log('----------------------');
+      console.log(message.value.toString());
+      console.log('----------------------');
+      
+      // console.log(
+      //   `${group}: [${topic}]: PART:${partition}:`,
+      //   message.value.toString()
+      // );
     },
+    
   });
 }
 
